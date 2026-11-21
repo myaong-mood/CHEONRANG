@@ -8,6 +8,68 @@
   const dialog = $('profile-dialog');
   const music = $('site-bgm');
   music.volume = 0.35;
+  const personalMusic = $('character-bgm');
+  personalMusic.volume = 0.5;
+  let currentTheme = null, themeActive = false, resumeMainMusic = false, themeSession = 0;
+  function themeFor(m) { return m.theme || null; }
+  function themePanel(m) {
+    const theme = themeFor(m);
+    const available = !!(theme && theme.src);
+    return `<section class="character-theme" aria-label="${escape(m.name)} 개인 테마곡">
+      <div class="theme-insignia"><img src="${asset(m.id,'emblem')}" alt="" aria-hidden="true"></div>
+      <div class="theme-copy"><span class="theme-caption">CHARACTER THEME</span><strong>${escape(theme ? theme.title : m.codeEn)}</strong><span id="theme-status" class="theme-status" aria-live="polite">${available ? '눌러서 감상' : '음원 준비 중'}</span></div>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="${escape(m.name)} 테마곡 ${available ? '재생' : '준비 중'}" aria-pressed="false" ${available ? '' : 'disabled'}><span id="theme-play-icon" aria-hidden="true">▶</span></button>
+      <div class="theme-wave" aria-hidden="true">${Array.from({length:25},(_,i)=>`<i style="--bar:${[7,13,19,11,25,16,9,22][i%8]}px;--delay:-${i*.09}s"></i>`).join('')}</div>
+      ${available ? '<div class="theme-timeline"><span id="theme-elapsed">0:00</span><input id="theme-seek" type="range" min="0" max="100" value="0" step="0.1" aria-label="개인 테마곡 재생 위치"><span id="theme-duration">0:00</span></div>' : ''}
+    </section>`;
+  }
+  function updateThemeUI() {
+    if (!currentTheme) return;
+    $('theme-toggle').setAttribute('aria-pressed', String(themeActive));
+    $('theme-toggle').setAttribute('aria-label', themeActive ? '개인 테마곡 일시정지' : '개인 테마곡 재생');
+    $('theme-play-icon').textContent = themeActive ? 'Ⅱ' : '▶';
+    $('theme-status').textContent = themeActive ? 'NOW PLAYING' : '눌러서 감상';
+    $('profile-content').classList.toggle('theme-playing', themeActive);
+  }
+  function stopTheme(restore = true) {
+    themeSession++;
+    personalMusic.pause();
+    themeActive = false;
+    updateThemeUI();
+    const resume = restore && resumeMainMusic && !main.hidden;
+    resumeMainMusic = false;
+    if (resume) startMusic();
+  }
+  async function toggleTheme() {
+    if (!currentTheme) return;
+    if (themeActive) { stopTheme(); return; }
+    resumeMainMusic = !music.paused;
+    music.pause();
+    themeActive = true;
+    const session = ++themeSession;
+    updateThemeUI();
+    try { await personalMusic.play(); if (session !== themeSession && !themeActive) personalMusic.pause(); }
+    catch { if (session !== themeSession) return; stopTheme(); $('theme-status').textContent = '음원을 재생할 수 없습니다'; }
+  }
+  function themeTime(value) {
+    if (!Number.isFinite(value) || value < 0) return '0:00';
+    return Math.floor(value / 60) + ':' + String(Math.floor(value % 60)).padStart(2, '0');
+  }
+  function syncThemeTime() {
+    if (!currentTheme || !currentTheme.src) return;
+    const duration = personalMusic.duration;
+    $('theme-elapsed').textContent = themeTime(personalMusic.currentTime);
+    $('theme-duration').textContent = themeTime(duration);
+    $('theme-seek').value = Number.isFinite(duration) && duration > 0 ? personalMusic.currentTime / duration * 100 : 0;
+  }
+  personalMusic.addEventListener('timeupdate', syncThemeTime);
+  personalMusic.addEventListener('loadedmetadata', syncThemeTime);
+  personalMusic.addEventListener('ended', () => stopTheme());
+  personalMusic.addEventListener('error', () => {
+    if (!themeActive) return;
+    stopTheme();
+    $('theme-status').textContent = '음원을 재생할 수 없습니다';
+  });
   function syncMusicButton() {
     const playing = !music.paused;
     $('music-toggle').setAttribute('aria-pressed', String(playing));
@@ -16,7 +78,7 @@
   }
   function startMusic() { music.play().then(syncMusicButton).catch(syncMusicButton); }
   $('music-toggle').addEventListener('click', () => {
-    if (music.paused) startMusic(); else music.pause();
+    if (music.paused) { if (themeActive) stopTheme(false); startMusic(); } else music.pause();
   });
   music.addEventListener('play', syncMusicButton);
   music.addEventListener('pause', syncMusicButton);
@@ -56,6 +118,7 @@
   }
   $('enter-site').addEventListener('click', () => showMain());
   $('replay-teaser').addEventListener('click', () => {
+    stopTheme(false);
     music.pause();
     if (dialog.open) dialog.close();
     main.hidden = true; header.hidden = true; landing.hidden = false;
@@ -81,6 +144,12 @@
   function openProfile(id, trigger) {
     const m = data.members.find(member => member.id === id);
     if (!m) return;
+    if (themeActive) stopTheme();
+    currentTheme = themeFor(m);
+    if (currentTheme && currentTheme.src) {
+      personalMusic.src = currentTheme.src;
+      personalMusic.currentTime = 0;
+    }
     lastFocus = trigger || document.activeElement;
     $('profile-content').innerHTML = `
       <div class="profile-layout dossier" style="--member-accent:${m.accent}">
@@ -94,6 +163,7 @@
           <header class="record-masthead"><span>天武</span><div>작전국 · 특임대 천랑<small>PERSONNEL ARCHIVE</small></div><span class="record-clearance">공개<br>기록</span></header>
           <div class="record-identity"><div><p class="record-role">${escape(m.role)}</p><h2 id="profile-name">${escape(m.name)}${m.hanja ? `<small>${escape(m.hanja)}</small>` : ''}</h2></div><div class="record-rank"><span>天</span><small>${m.id === 'raon' ? '천율' : '천위'}</small></div></div>
           <div class="record-codename"><span class="record-caption">CODE NAME</span><p class="profile-code">${escape(m.codeEn)}</p><span class="record-code-ko">${escape(m.codeKo)}${m.id === 'gyeom' || m.id === 'hyeonryun' ? ' · '+escape(m.code) : ''}</span><img src="assets/nameplate-crest.svg" alt="" aria-hidden="true"></div>
+          ${themePanel(m)}
           <div class="profile-keywords">${m.keywords.map(k => `<span>${escape(k)}</span>`).join('')}</div>
           <blockquote class="profile-quote"><span aria-hidden="true">“</span><p>${escape(m.quote)}</p></blockquote>
           <dl class="profile-facts"><div><dt>나이</dt><dd>${m.age}세</dd></div><div><dt>체격</dt><dd>${escape(m.height)}</dd></div><div class="fact-ability"><dt>능력</dt><dd>${escape(m.ability)}</dd></div><div><dt>제작</dt><dd>${escape(m.creator)}</dd></div></dl>
@@ -110,13 +180,21 @@
     const button = event.target.closest('[data-member]');
     if (button) openProfile(button.dataset.member, button);
   });
+  $('profile-content').addEventListener('click', event => {
+    if (event.target.closest('#theme-toggle')) toggleTheme();
+  });
+  $('profile-content').addEventListener('input', event => {
+    if (event.target.id !== 'theme-seek' || !Number.isFinite(personalMusic.duration)) return;
+    personalMusic.currentTime = Math.max(0, Math.min(100, Number(event.target.value))) / 100 * personalMusic.duration;
+    syncThemeTime();
+  });
   $('close-profile').addEventListener('click', () => dialog.close());
   dialog.addEventListener('click', event => {
     if (event.target !== dialog) return;
     const rect = dialog.getBoundingClientRect();
     if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close();
   });
-  dialog.addEventListener('close', () => { document.body.classList.remove('modal-open'); if (lastFocus && lastFocus.isConnected) lastFocus.focus({preventScroll:true}); });
+  dialog.addEventListener('close', () => { stopTheme(); currentTheme = null; document.body.classList.remove('modal-open'); if (lastFocus && lastFocus.isConnected) lastFocus.focus({preventScroll:true}); });
 
   function riftMark(level) {
     const cuts = Array.from({length:level + 1}, (_,i) => { const x = 37 + i * 9 - level * 4.5; return `<path d="M${x + 10} 12 L${x - 1} 39 L${x + 6} 43 L${x - 4} 81 L${x + 15} 47 L${x + 8} 41 L${x + 16} 18" fill="currentColor" opacity="${1-i*.12}"/>`; }).join('');

@@ -92,3 +92,51 @@ test('Stylesheet contains no accidental patch markers that invalidate nameplate 
   assert.doesNotMatch(css,/^\+/m);
   assert.match(css,/\n\.nameplate-register\{/);
 });
+
+test('Personal themes are opt-in, pause main music, and restore only an existing playback session',()=>{
+  const {element:get}=boot('#team');
+  const open=id=>get('team-roster').emit('click',{target:{closest:()=>({dataset:{member:id},isConnected:true,focus(){}})}});
+  open('hyeonryun');
+  assert.equal(get('site-bgm').paused,true);
+  assert.equal(get('character-bgm').paused,true);
+  get('profile-content').emit('click',{target:{closest:()=>get('theme-toggle')}});
+  assert.equal(get('character-bgm').paused,false);
+  assert.match(decodeURIComponent(get('character-bgm').src),/기울어진 천칭.mp3/);
+  assert.equal(get('site-bgm').paused,true);
+  get('close-profile').emit('click');
+  assert.equal(get('character-bgm').paused,true);
+  assert.equal(get('site-bgm').paused,true);
+  get('music-toggle').emit('click');
+  open('hyeonryun');get('profile-content').emit('click',{target:{closest:()=>get('theme-toggle')}});
+  assert.equal(get('site-bgm').paused,true);
+  get('close-profile').emit('click');
+  assert.equal(get('site-bgm').paused,false);
+  open('hyeonryun');get('profile-content').emit('click',{target:{closest:()=>get('theme-toggle')}});
+  get('replay-teaser').emit('click');
+  assert.equal(get('character-bgm').paused,true);
+  assert.equal(get('site-bgm').paused,true);
+});
+test('A character with no assigned theme shows preparation status and cannot start another track',()=>{
+  const {element:get}=boot('#team');
+  get('team-roster').emit('click',{target:{closest:()=>({dataset:{member:'raon'},isConnected:true,focus(){}})}});
+  assert.match(get('profile-content').innerHTML,/음원 준비 중/);
+  assert.match(get('profile-content').innerHTML,/id="theme-toggle"[^>]*disabled/);
+  get('profile-content').emit('click',{target:{closest:()=>get('theme-toggle')}});
+  assert.equal(get('character-bgm').paused,true);
+  assert.equal(get('character-bgm').paused,true);
+});
+
+test('Uploaded MP3s are assigned to the correct profiles; pause preserves position and seek updates time',()=>{
+  const {element:get}=boot('#team');
+  const open=id=>get('team-roster').emit('click',{target:{closest:()=>({dataset:{member:id},isConnected:true,focus(){}})}});
+  const toggle=()=>get('profile-content').emit('click',{target:{closest:()=>get('theme-toggle')}});
+  for(const [id,file] of [['gyeom','극야, 끝나지 않는 겨울.mp3'],['ungyeol','빛이 꺾이는 자리.mp3'],['hyeonryun','기울어진 천칭.mp3']]){
+    open(id);assert.equal(decodeURIComponent(get('character-bgm').src),file);assert.equal(get('character-bgm').paused,true);
+    toggle();get('character-bgm').currentTime=20;toggle();assert.equal(get('character-bgm').currentTime,20);
+    toggle();assert.equal(get('character-bgm').currentTime,20);
+    get('profile-content').emit('input',{target:{id:'theme-seek',value:50}});
+    assert.equal(get('character-bgm').currentTime,44.5);
+    assert.equal(get('theme-elapsed').textContent,'0:44');
+    get('close-profile').emit('click');assert.equal(get('character-bgm').paused,true);
+  }
+});
