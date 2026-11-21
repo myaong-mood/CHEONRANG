@@ -65,6 +65,6 @@ test('Landing logo and decoration never occupy the video aperture',()=>{
 });
 test('All static local references exist except the explicitly pending teaser',()=>{
   const refs=[...html.matchAll(/(?:src|href|poster)="([^"#]+)"/g)].map(m=>m[1]).filter(x=>!/^https?:/.test(x));
-  for(const ref of refs){if(ref==='CHEONRANG_MAIN_TEASER.MP4')continue;assert.ok(fs.existsSync(path.join(root,ref)),ref);}
+  for(const ref of refs){if(ref==='CHEONRANG_MAIN_TEASER.MP4')continue;assert.ok(fs.existsSync(path.join(root,ref.split('?')[0])),ref);}
   assert.match(html,/<meta charset="utf-8">/);assert.match(html,/<dialog[^>]*aria-labelledby="profile-name"/);assert.doesNotMatch(app,/\.secret\b/);
 });
