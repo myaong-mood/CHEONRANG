@@ -82,7 +82,25 @@
     const m = data.members.find(member => member.id === id);
     if (!m) return;
     lastFocus = trigger || document.activeElement;
-    $('profile-content').innerHTML = `<div class="profile-layout" style="--member-accent:${m.accent}"><div class="profile-visual"><img class="profile-photo" src="${asset(m.id,'portrait')}" alt="${escape(m.name)}의 초상"><div class="profile-photo-shade"></div><img class="profile-large-emblem" src="${asset(m.id,'emblem')}" alt="${escape(m.name)} 능력 문장"></div><div class="profile-record"><img class="profile-watermark" src="${asset(m.id,'emblem')}" alt="" aria-hidden="true"><p class="eyebrow">${escape(m.role)} / PERSONNEL RECORD</p><h2 id="profile-name">${escape(m.name)}</h2><p class="profile-code">${escape(m.codeEn)}<small>${escape(m.codeKo)} ${m.code === m.codeKo ? '' : (m.id === 'gyeom' || m.id === 'hyeonryun' ? escape(m.code) : '')}</small></p><div class="profile-keywords">${m.keywords.map(k => `<span>${escape(k)}</span>`).join('')}</div><blockquote class="profile-quote">“${escape(m.quote)}”</blockquote><dl class="profile-facts"><div><dt>나이</dt><dd>${m.age}세</dd></div><div><dt>체격</dt><dd>${escape(m.height)}</dd></div><div><dt>능력</dt><dd>${escape(m.ability)}</dd></div><div><dt>제작</dt><dd>${escape(m.creator)}</dd></div></dl><div class="profile-description">${m.description.map(section => `<h3>${escape(section.title)}</h3><p>${escape(section.text)}</p>`).join('')}</div><a class="story-link" href="https://tikita.ai/ko/story/${m.story}" target="_blank" rel="noopener noreferrer">${escape(m.name)}의 이야기 만나기</a></div></div>`;
+    $('profile-content').innerHTML = `
+      <div class="profile-layout dossier" style="--member-accent:${m.accent}">
+        <div class="profile-visual">
+          <img class="profile-photo" src="${asset(m.id,'portrait')}" alt="${escape(m.name)}의 초상">
+          <div class="portrait-register"><span>天武 · 特任隊</span><span>천랑 소속</span></div>
+          <div class="portrait-inscription"><span>${escape(m.codeKo)}</span><small>${escape(m.codeEn)}</small></div>
+        </div>
+        <div class="profile-record">
+          <img class="profile-watermark" src="${asset(m.id,'emblem')}" alt="" aria-hidden="true">
+          <header class="record-masthead"><span>天武</span><div>작전국 · 특임대 천랑<small>PERSONNEL ARCHIVE</small></div><span class="record-clearance">공개<br>기록</span></header>
+          <div class="record-identity"><div><p class="record-role">${escape(m.role)}</p><h2 id="profile-name">${escape(m.name)}${m.hanja ? `<small>${escape(m.hanja)}</small>` : ''}</h2></div><div class="record-rank"><span>天</span><small>${m.id === 'raon' ? '천율' : '천위'}</small></div></div>
+          <div class="record-codename"><span class="record-caption">CODE NAME</span><p class="profile-code">${escape(m.codeEn)}</p><span class="record-code-ko">${escape(m.codeKo)}${m.id === 'gyeom' || m.id === 'hyeonryun' ? ' · '+escape(m.code) : ''}</span><img src="assets/nameplate-crest.svg" alt="" aria-hidden="true"></div>
+          <div class="profile-keywords">${m.keywords.map(k => `<span>${escape(k)}</span>`).join('')}</div>
+          <blockquote class="profile-quote"><span aria-hidden="true">“</span><p>${escape(m.quote)}</p></blockquote>
+          <dl class="profile-facts"><div><dt>나이</dt><dd>${m.age}세</dd></div><div><dt>체격</dt><dd>${escape(m.height)}</dd></div><div class="fact-ability"><dt>능력</dt><dd>${escape(m.ability)}</dd></div><div><dt>제작</dt><dd>${escape(m.creator)}</dd></div></dl>
+          <div class="profile-description">${m.description.map((section,i) => `<section class="record-section"><div class="record-section-heading"><span class="record-section-seal" aria-hidden="true">${['能','性','錄'][i] || '錄'}</span><h3>${escape(section.title)}</h3><i aria-hidden="true"></i></div><p>${escape(section.text)}</p></section>`).join('')}</div>
+          <footer class="record-footer"><img src="${asset(m.id,'emblem')}" alt="" aria-hidden="true"><div><small>천랑 · 개인 이야기</small><a class="story-link" href="https://tikita.ai/ko/story/${m.story}" target="_blank" rel="noopener noreferrer">${escape(m.name)}의 이야기 만나기 <span aria-hidden="true">＋</span></a></div></footer>
+        </div>
+      </div>`;
     if (!dialog.open) dialog.showModal();
     document.body.classList.add('modal-open');
     dialog.scrollTop = 0;
