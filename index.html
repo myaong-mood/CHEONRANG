@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0c0e11">
+  <meta name="description" content="현대 황제국 천람. 황실 직속 천무 작전국 특임대 천랑의 다섯 천급 각성자와 세계관을 만나다.">
+  <title>天狼 · CHEONRANG — 천람 특임대</title>
+  <link rel="icon" href="assets/hyeonryun-emblem.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500;1,600&family=Noto+Serif+KR:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="data.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 이동</a>
+  <section id="landing" class="landing" aria-label="천랑 티저">
+    <video id="teaser" class="landing-video" autoplay muted loop playsinline preload="metadata" poster="assets/cheonram-capital.webp" aria-label="천랑 메인 티저">
+      <source src="CHEONRANG_MAIN_TEASER.MP4" type="video/mp4">
+    </video>
+    <div class="landing-shade" aria-hidden="true"></div>
+    <div class="landing-masthead"><span>天嵐 · 皇室直屬</span><span>CHEONMU SPECIAL OPERATIONS</span></div>
+    <div class="landing-content">
+      <p class="eyebrow">다섯 명의 천급, 하나의 전선</p>
+      <img class="landing-logo" src="assets/cheonrang-logo.webp" alt="天狼 천랑" width="2170" height="725">
+      <p class="landing-line">갈라진 하늘 아래, 함께 돌아올 이름.</p>
+    </div>
+    <div class="landing-bottom">
+      <button id="sound-toggle" class="quiet-button" type="button" aria-pressed="false">소리 켜기</button>
+      <button id="enter-site" class="enter-button" type="button"><span class="button-ornament" aria-hidden="true">❖</span><span>천랑을 만나다<small>ENTER CHEONRANG</small></span><span class="button-ornament" aria-hidden="true">❖</span></button>
+      <button id="video-toggle" class="quiet-button" type="button" aria-pressed="false">영상 일시정지</button>
+    </div>
+  </section>
+
+  <header id="site-header" class="site-header" hidden>
+    <a class="brand" href="#home" aria-label="천랑 메인"><span>天狼</span><small>CHEONRANG</small></a>
+    <nav aria-label="주요 메뉴"><a href="#team">천랑</a><a href="#world">천람</a><a href="#classification">위험과 각성</a></nav>
+    <button id="replay-teaser" class="header-teaser" type="button">TEASER <span aria-hidden="true">▷</span></button>
+  </header>
+  <main id="main" hidden>
+    <section id="home" class="national-hero">
+      <img class="capital-image" src="assets/cheonram-capital.webp" alt="경운궁의 전통 궁궐과 운경의 현대적인 마천루가 공존하는 천람의 야경" fetchpriority="high" width="1536" height="1024">
+      <div class="hero-caption"><span>운경 雲京</span><span>경운궁 景雲宮</span></div>
+      <div class="national-title"><p class="eyebrow">THE EMPIRE OF CHEONRAM</p><h1><span>天嵐</span><small>천람</small></h1><p>오래된 황권 위에,<br>새로운 세계가 선다.</p><span class="national-motto">護國安民 · 호국안민</span></div>
+      <div class="hero-edge" aria-hidden="true">皇室直屬　天武作戰局　特任隊</div>
+    </section>
+
+    <section id="team" class="team-section section-shell">
+      <div class="section-heading team-heading"><div><p class="eyebrow">IMPERIAL SPECIAL OPERATIONS</p><h2>天狼 <span>천랑</span></h2></div><p class="section-intro">천람 전체에 약 열두 명뿐인 천급 각성자.<br>그중 다섯 명이 모인, 천무의 예외적인 전력.</p></div>
+      <div class="team-statement"><span class="statement-glyph" aria-hidden="true">❖</span><p>네 명의 천위와 한 명의 천율.<br class="mobile-only"> 대재급 이상의 균열과 고위험 임무를 맡는다.</p><span class="statement-glyph" aria-hidden="true">❖</span></div>
+      <div id="team-roster" class="team-roster" aria-label="천랑 팀원"></div>
+      <p class="interaction-hint">인물의 초상 또는 문장을 누르면 개인 기록이 열립니다.</p>
+      <div class="team-quote"><span aria-hidden="true">“</span><p>같이 들어갔다면,<br><strong>같이 돌아오는 것.</strong></p><small>天狼 · CHEONRANG</small></div>
+    </section>
+
+    <section id="world" class="world-section section-shell">
+      <div class="section-heading"><div><p class="eyebrow">A WORLD DIVIDED BY THE RIFT</p><h2>하늘이 갈라진<br><span>이후의 세계.</span></h2></div><p class="section-intro">현대의 일상과 황실의 질서,<br>그 사이에 열린 균열.</p></div>
+      <div class="origin-layout"><div class="origin-symbol" aria-hidden="true"><span>裂</span><i></i><i></i><i></i></div><div class="origin-copy"><p class="eyebrow">균열의 기원</p><h3>악업이 틈을 열고,<br>수호의 의지가 힘을 깨웠다.</h3><p>탐욕·증오·폭력·배신이 쌓여 세계의 균형이 무너졌다. 찢어진 하늘에서는 악업이 형체를 얻은 <strong>흉수</strong>가 나타났다. 수호 의지·희생·연민·희망은 그에 맞설 힘, <strong>천위와 천율</strong>의 각성으로 발현됐다.</p><div class="keyword-row"><span>균열 裂</span><span>천위 天衛 · 센티넬</span><span>천율 天律 · 가이드</span></div></div></div>
+      <div class="world-columns"><article><span class="article-hanja">國</span><p class="eyebrow">STATE & DAILY LIFE</p><h3>천람 天嵐</h3><p>천씨 황가가 통치하는 현대 세습 황제국. 수도 운경에는 고층 상업지구와 궁궐, 현대식 주거단지와 귀족 저택이 공존한다. 스마트폰·인터넷·고속철도·현대 의료가 보편적이다.</p><dl class="compact-facts"><div><dt>수도</dt><dd>운경 雲京</dd></div><div><dt>황궁</dt><dd>경운궁 景雲宮</dd></div><div><dt>국시</dt><dd>호국안민 護國安民</dd></div><div><dt>화폐</dt><dd>환 圜 · 1환 = 100전</dd></div></dl></article><article><span class="article-hanja">武</span><p class="eyebrow">COMMAND & RESPONSE</p><h3>천무 天武</h3><p>황제 직속 각성자 관리·균열 대응기관. 총관과 부총관이 기관을 운영하며 황제가 최고 통수권을 가진다. 다른 황족의 작전 관여에는 공식 위임이나 황명 전달이 필요하다.</p><div class="command-list"><p><strong>관측국</strong><span>균열 관측 · 분석 · 출동 경보</span></p><p><strong>작전국</strong><span>천위부 · 천율부 · 특임대</span></p><p><strong>지원국</strong><span>의료 · 보급 · 회수 · 현장 수습</span></p></div></article><article><span class="article-hanja">律</span><p class="eyebrow">PRIVILEGE & OBLIGATION</p><h3>힘의 대가</h3><p>각성자에게는 높은 신분과 부·명예·특권이 주어진다. 그 대가로 요구되는 것은 국가와 황실에 대한 충성이다. 각성의 유전은 입증되지 않았고, 평범한 가문에서도 천급이 탄생한다.</p><blockquote>악업에서 비롯된 균열을 막으면서,<br>악업을 낳는 질서는 유지한다.</blockquote></article></div>
+    </section>
+
+    <section id="classification" class="classification-section section-shell">
+      <div class="section-heading"><div><p class="eyebrow">THREE DISTINCT CLASSIFICATIONS</p><h2>위험을 읽고,<br><span>힘을 구분하다.</span></h2></div><p class="section-intro">균열의 위험, 흉수의 위험,<br>각성자의 능력 등급은 서로 다른 기준이다.</p></div>
+      <article class="rank-system rift-system"><div class="rank-heading"><span class="classification-label">裂</span><div><p class="eyebrow">RIFT CLASSIFICATION</p><h3>균열 위험 등급</h3><p>균열 전체의 위험을 판정한다.</p></div><span class="scale-direction">경 → 중 → 대재 → 멸</span></div><div id="rift-ranks" class="rank-grid"></div><p class="rank-note">관측국 판정 후 작전국이 전력을 파견한다. 특임대는 대재급 이상과 고위험 임무에 투입되며, 흉수 토벌 뒤 균열을 봉인한다.</p></article>
+      <article class="rank-system beast-system"><div class="rank-heading"><span class="classification-label">凶</span><div><p class="eyebrow">BEAST CLASSIFICATION</p><h3>흉수 위험 등급</h3><p>개체의 전투 위험·특수 능력·피해 범위를 평가한다.</p></div><span class="scale-direction">사 → 악 → 재 → 멸</span></div><div id="beast-ranks" class="rank-grid"></div><p class="rank-note">흉수 개체의 위험 등급은 균열 등급과 반드시 일치하지 않는다. 토벌 뒤에는 경제적으로 활용 가능한 부산물이 남을 수 있다.</p></article>
+      <article class="rank-system awakened-system"><div class="rank-heading"><span class="classification-label">覺</span><div><p class="eyebrow">AWAKENED CLASSIFICATION</p><h3>천위 · 천율 능력 등급</h3><p>각성 당시 결정되는 선천적 재능.</p></div><span class="scale-direction">범 → 영 → 현 → 천</span></div><div id="awakened-ranks" class="rank-grid"></div><p class="rank-note"><strong>훈련으로 오르는 것은 숙련도와 제어 능력이다.</strong> 등급 자체는 오르지 않는다. 천율의 등급은 가이딩 능력으로 판정하며, 천랑 정식 특임대원은 현급 이상으로 구성된다.</p></article>
+      <div class="guiding-principle"><div><p class="eyebrow">SENTINEL & GUIDE</p><h3>하나의 힘과,<br>그 힘을 받아낼 하나의 파장.</h3></div><div><p>천급 천위 한 명은 도시 하나를 궤멸시킬 수준의 파괴력을 지닌다. 천급 천율 한 명은 그 천위가 방출하는 에너지 파동을 <strong>1:1로 상쇄할 출력량</strong>을 지닌다.</p><p>현급 천율은 천급 천위의 에너지량을 같은 방식으로 1:1 상쇄할 수 없다. 동급 천율의 출력은 동급 천위 한 명의 최대 출력과 균형을 이루며, 여러 천위를 동시에 가이딩하면 상쇄력은 대상에게 분산된다.</p></div></div>
+    </section>
+
+    <section class="archive-section section-shell" aria-labelledby="archive-title"><div class="section-heading"><div><p class="eyebrow">CHEONRAM ARCHIVES</p><h2 id="archive-title">제국의 기록.</h2></div><span class="archive-seal" aria-hidden="true">天嵐</span></div><div id="archive-list"></div></section>
+    <footer class="site-footer"><div><span class="footer-title">天狼</span><p>하늘이 갈라진 뒤에도,<br>돌아올 자리는 남아 있다.</p></div><div><p>12 · 김땃쥐 · 푸우딩 · 먀한먀옹 · veyr</p><small>동양풍 센티넬·가이드 창작 합작 · 천람과 등장인물은 가상의 설정입니다.</small></div><a href="#home">처음으로</a></footer>
+  </main>
+
+  <dialog id="profile-dialog" class="profile-dialog" aria-labelledby="profile-name"><div class="profile-surface"><button id="close-profile" class="close-profile" aria-label="프로필 닫기" type="button">×</button><div id="profile-content"></div></div></dialog>
+  <noscript><style>#landing{display:none}#site-header[hidden],#main[hidden]{display:block}</style><p>개인 프로필과 팀원 목록을 보려면 JavaScript를 켜 주세요.</p></noscript>
+</body>
+</html>
