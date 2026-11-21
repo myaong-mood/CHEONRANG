@@ -67,7 +67,15 @@
   $('team-roster').innerHTML = data.members.map(m => `
     <button type="button" class="member-card${m.leader ? ' leader' : ''}" data-member="${escape(m.id)}" style="--accent:${m.accent}" aria-label="${escape(m.name)} · ${escape(m.codeKo)} 개인 프로필 열기">
       <span class="portrait-frame"><img class="member-portrait" src="${asset(m.id,'portrait')}" alt="${escape(m.name)}의 초상" loading="lazy" width="400" height="600">${m.leader ? '<span class="leader-badge">대장</span>' : ''}<span class="member-rank">天 · ${m.id === 'raon' ? '천율' : '천위'}</span><img class="member-emblem" src="${asset(m.id,'emblem')}" alt="${escape(m.name)}의 능력 문장" loading="lazy" width="640" height="640"></span>
-      <span class="member-copy"><img class="member-watermark" src="${asset(m.id,'emblem')}" alt="" aria-hidden="true" loading="lazy"><span class="member-role">${escape(m.role)}</span><strong class="member-name">${escape(m.name)}</strong><span class="member-codename">${m.id === 'gyeom' || m.id === 'hyeonryun' ? escape(m.codeKo) + '<small class="codename-hanja">' + escape(m.code) + '</small>' : escape(m.code)}</span><span class="member-ability">${escape(m.ability)}</span></span>
+      <span class="member-copy">
+        <img class="nameplate-crest" src="assets/nameplate-crest.svg" alt="" aria-hidden="true" loading="lazy">
+        <img class="member-watermark" src="${asset(m.id,'emblem')}" alt="" aria-hidden="true" loading="lazy">
+        <span class="nameplate-register"><span class="member-role">${m.id === 'raon' ? '天律 · 천율' : '天衛 · 천위'}</span><span class="nameplate-grade" aria-label="천급">天</span></span>
+        <span class="nameplate-identity"><strong class="member-name">${escape(m.name)}</strong>${m.hanja ? `<small class="member-hanja">${escape(m.hanja)}</small>` : ''}</span>
+        <span class="codename-panel"><span class="codename-caption">CODE NAME <i aria-hidden="true"></i></span><span class="member-codename">${escape(m.codeEn)}</span><span class="codename-reading">${escape(m.codeKo)}${m.id === 'gyeom' || m.id === 'hyeonryun' ? ' · ' + escape(m.code) : ''}</span></span>
+        <span class="nameplate-skill"><span class="ability-seal" aria-hidden="true">異能</span><span class="member-ability">${escape({gyeom:'동천',raon:'홍련',hyeonryun:'중력 조작',ungyeol:'광학 굴절',gijun:'영점 시차'}[m.id])}</span></span>
+        <span class="nameplate-action">개인 기록 열람 <span aria-hidden="true">＋</span></span>
+      </span>
     </button>`).join('');
 
   function openProfile(id, trigger) {
