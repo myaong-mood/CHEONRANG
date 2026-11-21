@@ -31,6 +31,7 @@ jobs:
           cp index.html styles.css app.js data.js .nojekyll _site/
           cp -R assets _site/assets
           if [ -f CHEONRANG_MAIN_TEASER.MP4 ]; then cp CHEONRANG_MAIN_TEASER.MP4 _site/; fi
+          if [ -f golden_cage_VER.1.mp3 ]; then cp golden_cage_VER.1.mp3 _site/; fi
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload website

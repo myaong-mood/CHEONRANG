@@ -6,6 +6,22 @@
   const asset = (id, type) => `assets/${id}-${type}.${type === 'emblem' ? 'png' : 'webp'}`;
   const landing = $('landing'), video = $('teaser'), main = $('main'), header = $('site-header');
   const dialog = $('profile-dialog');
+  const music = $('site-bgm');
+  music.volume = 0.35;
+  function syncMusicButton() {
+    const playing = !music.paused;
+    $('music-toggle').setAttribute('aria-pressed', String(playing));
+    $('music-toggle').setAttribute('aria-label', playing ? '배경음악 일시정지' : '배경음악 재생');
+    $('music-label').textContent = playing ? 'BGM 재생 중' : 'BGM 재생';
+  }
+  function startMusic() { music.play().then(syncMusicButton).catch(syncMusicButton); }
+  $('music-toggle').addEventListener('click', () => {
+    if (music.paused) startMusic(); else music.pause();
+  });
+  music.addEventListener('play', syncMusicButton);
+  music.addEventListener('pause', syncMusicButton);
+  music.addEventListener('error', () => { music.pause(); syncMusicButton(); });
+  syncMusicButton();
   let lastFocus = null, isEntering = false;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -29,6 +45,8 @@
   function showMain({animate = true} = {}) {
     if (isEntering || landing.hidden) return;
     isEntering = true;
+    video.pause();
+    startMusic();
     const finish = () => {
       video.pause(); landing.hidden = true; landing.classList.remove('landing-exit');
       main.hidden = false; header.hidden = false; isEntering = false;
@@ -39,6 +57,7 @@
   }
   $('enter-site').addEventListener('click', () => showMain());
   $('replay-teaser').addEventListener('click', () => {
+    music.pause();
     if (dialog.open) dialog.close();
     main.hidden = true; header.hidden = true; landing.hidden = false;
     window.scrollTo(0, 0); history.replaceState(null, '', location.pathname + location.search);

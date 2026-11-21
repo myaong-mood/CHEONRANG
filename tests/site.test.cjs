@@ -50,6 +50,19 @@ test('Three separate rank systems render four tiles each with different insignia
 test('Direct section URLs reveal main; missing video is non-blocking',()=>{
   const {element:get}=boot('#team');assert.equal(get('main').hidden,false);assert.equal(get('team').scrolled,true);get('teaser-source').emit('error');assert.equal(get('landing').classList.contains('video-unavailable'),true);
 });
+test('Entering main starts BGM, the music button toggles it, and teaser replay pauses it',()=>{
+  const {element:get}=boot();assert.equal(get('site-bgm').paused,true);
+  get('enter-site').emit('click');assert.equal(get('site-bgm').paused,false);assert.equal(get('teaser').paused,true);assert.equal(get('music-toggle').attributes['aria-pressed'],'true');
+  get('music-toggle').emit('click');assert.equal(get('site-bgm').paused,true);
+  get('music-toggle').emit('click');assert.equal(get('site-bgm').paused,false);
+  get('replay-teaser').emit('click');assert.equal(get('site-bgm').paused,true);
+});
+test('Landing logo and decoration never occupy the video aperture',()=>{
+  const aperture=html.match(/<div class="video-aperture">([\s\S]*?)<\/div>/)[1];
+  assert.match(aperture,/<video/);assert.doesNotMatch(aperture,/<img|landing-logo|landing-shade/);
+  assert.ok(html.indexOf('class="landing-logo"')<html.indexOf('class="video-aperture"'));
+  assert.doesNotMatch(html,/class="landing-shade"/);
+});
 test('All static local references exist except the explicitly pending teaser',()=>{
   const refs=[...html.matchAll(/(?:src|href|poster)="([^"#]+)"/g)].map(m=>m[1]).filter(x=>!/^https?:/.test(x));
   for(const ref of refs){if(ref==='CHEONRANG_MAIN_TEASER.MP4')continue;assert.ok(fs.existsSync(path.join(root,ref)),ref);}

@@ -17,27 +17,25 @@
 <body>
   <a class="skip-link" href="#main">본문으로 이동</a>
   <section id="landing" class="landing" aria-label="천랑 티저">
-    <video id="teaser" class="landing-video" autoplay muted loop playsinline preload="metadata" poster="assets/cheonram-capital.webp" aria-label="천랑 메인 티저">
-      <source src="CHEONRANG_MAIN_TEASER.MP4" type="video/mp4">
-    </video>
-    <div class="landing-shade" aria-hidden="true"></div>
+    <div class="landing-frame" aria-hidden="true"><img class="corner corner-tl" src="assets/landing-corner.svg" alt=""><img class="corner corner-tr" src="assets/landing-corner.svg" alt=""><img class="corner corner-bl" src="assets/landing-corner.svg" alt=""><img class="corner corner-br" src="assets/landing-corner.svg" alt=""><span class="frame-jewel frame-jewel-top">❖</span><span class="frame-jewel frame-jewel-bottom">❖</span></div>
     <div class="landing-masthead"><span>天嵐 · 皇室直屬</span><span>CHEONMU SPECIAL OPERATIONS</span></div>
     <div class="landing-content">
-      <p class="eyebrow">다섯 명의 천급, 하나의 전선</p>
       <img class="landing-logo" src="assets/cheonrang-logo.webp" alt="天狼 천랑" width="2170" height="725">
-      <p class="landing-line">갈라진 하늘 아래, 함께 돌아올 이름.</p>
+      <p class="landing-line">다섯 명의 천급, 하나의 전선.</p>
     </div>
-    <div class="landing-bottom">
-      <button id="sound-toggle" class="quiet-button" type="button" aria-pressed="false">소리 켜기</button>
-      <button id="enter-site" class="enter-button" type="button"><span class="button-ornament" aria-hidden="true">❖</span><span>천랑을 만나다<small>ENTER CHEONRANG</small></span><span class="button-ornament" aria-hidden="true">❖</span></button>
-      <button id="video-toggle" class="quiet-button" type="button" aria-pressed="false">영상 일시정지</button>
-    </div>
+    <figure class="landing-player">
+      <figcaption><span>天狼 · MAIN TEASER</span><span>CHEONRANG</span></figcaption>
+      <div class="video-aperture"><video id="teaser" class="landing-video" autoplay muted loop playsinline preload="metadata" poster="assets/cheonram-capital.webp" aria-label="천랑 메인 티저"><source src="CHEONRANG_MAIN_TEASER.MP4" type="video/mp4"></video></div>
+      <div class="player-controls"><button id="video-toggle" class="quiet-button" type="button" aria-pressed="false">영상 일시정지</button><button id="sound-toggle" class="quiet-button" type="button" aria-pressed="false">소리 켜기</button></div>
+    </figure>
+    <div class="landing-bottom"><p>갈라진 하늘 아래, 함께 돌아올 이름.</p><button id="enter-site" class="enter-button" type="button"><span class="button-ornament" aria-hidden="true">❖</span><span>천랑을 만나다<small>ENTER CHEONRANG</small></span><span class="button-ornament" aria-hidden="true">❖</span></button></div>
   </section>
 
+  <audio id="site-bgm" src="golden_cage_VER.1.mp3" loop preload="none"></audio>
   <header id="site-header" class="site-header" hidden>
     <a class="brand" href="#home" aria-label="천랑 메인"><span>天狼</span><small>CHEONRANG</small></a>
     <nav aria-label="주요 메뉴"><a href="#team">천랑</a><a href="#world">천람</a><a href="#classification">위험과 각성</a></nav>
-    <button id="replay-teaser" class="header-teaser" type="button">TEASER <span aria-hidden="true">▷</span></button>
+    <div class="header-media"><button id="music-toggle" class="music-toggle" type="button" aria-pressed="false" aria-label="배경음악 재생"><span class="music-bars" aria-hidden="true"><i></i><i></i><i></i></span><span id="music-label">BGM 재생</span></button><button id="replay-teaser" class="header-teaser" type="button">TEASER <span aria-hidden="true">▷</span></button></div>
   </header>
   <main id="main" hidden>
     <section id="home" class="national-hero">
