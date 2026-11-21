@@ -10,9 +10,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500;1,600&family=Noto+Serif+KR:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261121-cinema2">
+  <link rel="stylesheet" href="styles.css?v=20261121-archive3">
   <script src="data.js" defer></script>
-  <script src="app.js?v=20261121-cinema2" defer></script>
+  <script src="app.js?v=20261121-archive3" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">본문으로 이동</a>
@@ -25,8 +25,8 @@
     </div>
     <figure class="landing-player">
       <figcaption><span>天狼 · MAIN TEASER</span><span>CHEONRANG</span></figcaption>
-      <div class="video-aperture"><video id="teaser" class="landing-video" autoplay muted loop playsinline preload="metadata" poster="assets/cheonram-capital.webp" aria-label="천랑 메인 티저"><source src="CHEONRANG_MAIN_TEASER.MP4" type="video/mp4"></video></div>
-      <div class="player-controls"><button id="video-toggle" class="quiet-button" type="button" aria-pressed="false">영상 일시정지</button><button id="sound-toggle" class="quiet-button" type="button" aria-pressed="false">소리 켜기</button></div>
+      <div class="video-aperture"><video id="teaser" class="landing-video" autoplay muted loop playsinline controls preload="metadata" poster="assets/cheonram-capital.webp" aria-label="천랑 메인 티저"><source src="CHEONRANG_MAIN_TEASER.MP4" type="video/mp4"></video></div>
+      <div class="player-controls video-tools"><button id="video-back" type="button" aria-label="영상 10초 뒤로">↶ <span>10초 뒤로</span></button><button id="video-forward" type="button" aria-label="영상 10초 앞으로"><span>10초 앞으로</span> ↷</button><button id="video-fullscreen" type="button">⛶ <span>전체화면</span></button></div>
     </figure>
     <div class="landing-bottom"><p>갈라진 하늘 아래, 함께 돌아올 이름.</p><button id="enter-site" class="enter-button" type="button"><span class="button-ornament" aria-hidden="true">❖</span><span>천랑을 만나다<small>ENTER CHEONRANG</small></span><span class="button-ornament" aria-hidden="true">❖</span></button></div>
   </section>
@@ -35,9 +35,11 @@
   <header id="site-header" class="site-header" hidden>
     <a class="brand" href="#home" aria-label="천랑 메인"><span>天狼</span><small>CHEONRANG</small></a>
     <nav aria-label="주요 메뉴"><a href="#team">천랑</a><a href="#world">천람</a><a href="#classification">위험과 각성</a></nav>
-    <div class="header-media"><button id="music-toggle" class="music-toggle" type="button" aria-pressed="false" aria-label="배경음악 재생"><span class="music-bars" aria-hidden="true"><i></i><i></i><i></i></span><span id="music-label">BGM 재생</span></button><button id="replay-teaser" class="header-teaser" type="button">TEASER <span aria-hidden="true">▷</span></button></div>
+    <div class="header-media"><button id="replay-teaser" class="header-teaser" type="button">TEASER <span aria-hidden="true">▷</span></button></div>
   </header>
   <main id="main" hidden>
+    <button id="music-toggle" class="music-toggle floating-music" type="button" aria-pressed="false" aria-label="배경음악 재생"><span class="music-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="music-button-copy"><span id="music-label">BGM OFF</span><small>GOLDEN CAGE</small></span><span class="music-switch" aria-hidden="true"></span></button>
+
     <section id="home" class="national-hero">
       <img class="capital-image" src="assets/cheonram-capital.webp" alt="경운궁의 전통 궁궐과 운경의 현대적인 마천루가 공존하는 천람의 야경" fetchpriority="high" width="1536" height="1024">
       <div class="hero-caption"><span>운경 雲京</span><span>경운궁 景雲宮</span></div>
@@ -55,7 +57,7 @@
 
     <section id="world" class="world-section section-shell">
       <div class="section-heading"><div><p class="eyebrow">A WORLD DIVIDED BY THE RIFT</p><h2>하늘이 갈라진<br><span>이후의 세계.</span></h2></div><p class="section-intro">현대의 일상과 황실의 질서,<br>그 사이에 열린 균열.</p></div>
-      <div class="origin-layout"><div class="origin-symbol" aria-hidden="true"><span>裂</span><i></i><i></i><i></i></div><div class="origin-copy"><p class="eyebrow">균열의 기원</p><h3>악업이 틈을 열고,<br>수호의 의지가 힘을 깨웠다.</h3><p>탐욕·증오·폭력·배신이 쌓여 세계의 균형이 무너졌다. 찢어진 하늘에서는 악업이 형체를 얻은 <strong>흉수</strong>가 나타났다. 수호 의지·희생·연민·희망은 그에 맞설 힘, <strong>천위와 천율</strong>의 각성으로 발현됐다.</p><div class="keyword-row"><span>균열 裂</span><span>천위 天衛 · 센티넬</span><span>천율 天律 · 가이드</span></div></div></div>
+      <div class="origin-layout"><figure class="origin-artwork"><img src="assets/rift-origin.webp" alt="폭풍에 휩싸인 하늘을 가르는 거대한 균열과 공중에 떠오른 석재" loading="lazy" width="1024" height="1024"><figcaption><span>裂天</span><small>악업이 세계의 경계를 무너뜨린 날.</small></figcaption></figure><div class="origin-copy"><p class="eyebrow">균열의 기원</p><h3>악업이 틈을 열고,<br>수호의 의지가 힘을 깨웠다.</h3><p>탐욕·증오·폭력·배신이 쌓여 세계의 균형이 무너졌다. 찢어진 하늘에서는 악업이 형체를 얻은 <strong>흉수</strong>가 나타났다. 수호 의지·희생·연민·희망은 그에 맞설 힘, <strong>천위와 천율</strong>의 각성으로 발현됐다.</p><div class="keyword-row"><span>균열 裂</span><span>천위 天衛 · 센티넬</span><span>천율 天律 · 가이드</span></div></div></div>
       <div class="world-columns"><article><span class="article-hanja">國</span><p class="eyebrow">STATE & DAILY LIFE</p><h3>천람 天嵐</h3><p>천씨 황가가 통치하는 현대 세습 황제국. 수도 운경에는 고층 상업지구와 궁궐, 현대식 주거단지와 귀족 저택이 공존한다. 스마트폰·인터넷·고속철도·현대 의료가 보편적이다.</p><dl class="compact-facts"><div><dt>수도</dt><dd>운경 雲京</dd></div><div><dt>황궁</dt><dd>경운궁 景雲宮</dd></div><div><dt>국시</dt><dd>호국안민 護國安民</dd></div><div><dt>화폐</dt><dd>환 圜 · 1환 = 100전</dd></div></dl></article><article><span class="article-hanja">武</span><p class="eyebrow">COMMAND & RESPONSE</p><h3>천무 天武</h3><p>황제 직속 각성자 관리·균열 대응기관. 총관과 부총관이 기관을 운영하며 황제가 최고 통수권을 가진다. 다른 황족의 작전 관여에는 공식 위임이나 황명 전달이 필요하다.</p><div class="command-list"><p><strong>관측국</strong><span>균열 관측 · 분석 · 출동 경보</span></p><p><strong>작전국</strong><span>천위부 · 천율부 · 특임대</span></p><p><strong>지원국</strong><span>의료 · 보급 · 회수 · 현장 수습</span></p></div></article><article><span class="article-hanja">律</span><p class="eyebrow">PRIVILEGE & OBLIGATION</p><h3>힘의 대가</h3><p>각성자에게는 높은 신분과 부·명예·특권이 주어진다. 그 대가로 요구되는 것은 국가와 황실에 대한 충성이다. 각성의 유전은 입증되지 않았고, 평범한 가문에서도 천급이 탄생한다.</p><blockquote>악업에서 비롯된 균열을 막으면서,<br>악업을 낳는 질서는 유지한다.</blockquote></article></div>
     </section>
 
@@ -67,7 +69,7 @@
       <div class="guiding-principle"><div><p class="eyebrow">SENTINEL & GUIDE</p><h3>하나의 힘과,<br>그 힘을 받아낼 하나의 파장.</h3></div><div><p>천급 천위 한 명은 도시 하나를 궤멸시킬 수준의 파괴력을 지닌다. 천급 천율 한 명은 그 천위가 방출하는 에너지 파동을 <strong>1:1로 상쇄할 출력량</strong>을 지닌다.</p><p>현급 천율은 천급 천위의 에너지량을 같은 방식으로 1:1 상쇄할 수 없다. 동급 천율의 출력은 동급 천위 한 명의 최대 출력과 균형을 이루며, 여러 천위를 동시에 가이딩하면 상쇄력은 대상에게 분산된다.</p></div></div>
     </section>
 
-    <section class="archive-section section-shell" aria-labelledby="archive-title"><div class="section-heading"><div><p class="eyebrow">CHEONRAM ARCHIVES</p><h2 id="archive-title">제국의 기록.</h2></div><span class="archive-seal" aria-hidden="true">天嵐</span></div><div id="archive-list"></div></section>
+    <section class="archive-section section-shell" aria-labelledby="archive-title"><div class="section-heading"><div><p class="eyebrow">CHEONRAM ARCHIVES</p><h2 id="archive-title">제국의 기록.</h2></div><span class="archive-seal" aria-hidden="true"><span>天嵐</span><small>帝國記錄</small></span></div><p class="archive-instruction">책등을 누르면 천람의 기록이 펼쳐집니다.</p><div id="archive-list" class="archive-bookshelf"></div></section>
     <footer class="site-footer"><div><span class="footer-title">天狼</span><p>하늘이 갈라진 뒤에도,<br>돌아올 자리는 남아 있다.</p></div><div><p>12 · 김땃쥐 · 푸우딩 · 먀한먀옹 · veyr</p><small>동양풍 센티넬·가이드 창작 합작 · 천람과 등장인물은 가상의 설정입니다.</small></div><a href="#home">처음으로</a></footer>
   </main>
 

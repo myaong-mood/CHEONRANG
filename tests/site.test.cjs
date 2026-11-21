@@ -12,16 +12,16 @@ function boot(hash='') {
     if(nodes.has(id)) return nodes.get(id);
     const listeners = new Map(), classes = new Set();
     const n = {id,innerHTML:'',textContent:'',hidden:['main','site-header'].includes(id),open:false,muted:true,paused:true,scrollTop:0,isConnected:true,
-      attributes:{},classList:{add(c){classes.add(c)},remove(c){classes.delete(c)},contains(c){return classes.has(c)}},
+      readyState:4,duration:89,currentTime:0,dataset:id.startsWith('book-spine-')?{book:id.slice(11)}:{},attributes:{},classList:{add(c){classes.add(c)},remove(c){classes.delete(c)},contains(c){return classes.has(c)},toggle(c,on){if(on)classes.add(c);else classes.delete(c)}},
       addEventListener(type,fn){if(!listeners.has(type))listeners.set(type,[]);listeners.get(type).push(fn)},
       emit(type,event={}){for(const fn of listeners.get(type)||[])fn(event)},
-      setAttribute(k,v){this.attributes[k]=v},focus(){document.activeElement=this},
+      getAttribute(k){return this.attributes[k]??null},setAttribute(k,v){this.attributes[k]=v},closest(){return id.startsWith('book-spine-')?element('archive-book-'+id.slice(11)):null},requestFullscreen(){this.fullscreenCalled=true;return Promise.resolve()},focus(){document.activeElement=this},
       querySelector(){return element(id+'-source')},
       pause(){this.paused=true;this.emit('pause')},play(){this.paused=false;this.emit('play');return Promise.resolve()},
       showModal(){this.open=true},close(){this.open=false;this.emit('close')},getBoundingClientRect(){return {left:10,right:100,top:10,bottom:100}},scrollIntoView(){this.scrolled=true}};
     nodes.set(id,n);return n;
   }
-  const document={getElementById:element,body:element('body'),activeElement:null,querySelector:s=>element(s.slice(1))};
+  const document={getElementById:element,body:element('body'),activeElement:null,querySelector:s=>{const m=s.match(/^\[data-book="(\d+)"\]$/);return m?element('book-spine-'+m[1]):element(s.slice(1))}};
   const window={document,matchMedia:()=>({matches:true}),scrollTo(){}};
   const ctx={window,document,location:{hash,pathname:'/CHEONRANG/',search:''},history:{replaceState(){}},requestAnimationFrame:fn=>fn(),setTimeout:fn=>fn(),console};
   vm.createContext(ctx);vm.runInContext(fs.readFileSync(path.join(root,'data.js'),'utf8'),ctx);vm.runInContext(app,ctx);
@@ -50,12 +50,30 @@ test('Three separate rank systems render four tiles each with different insignia
 test('Direct section URLs reveal main; missing video is non-blocking',()=>{
   const {element:get}=boot('#team');assert.equal(get('main').hidden,false);assert.equal(get('team').scrolled,true);get('teaser-source').emit('error');assert.equal(get('landing').classList.contains('video-unavailable'),true);
 });
-test('Entering main starts BGM, the music button toggles it, and teaser replay pauses it',()=>{
+test('BGM stays OFF until an explicit click, and pauses when returning to the teaser',()=>{
   const {element:get}=boot();assert.equal(get('site-bgm').paused,true);
-  get('enter-site').emit('click');assert.equal(get('site-bgm').paused,false);assert.equal(get('teaser').paused,true);assert.equal(get('music-toggle').attributes['aria-pressed'],'true');
+  get('enter-site').emit('click');assert.equal(get('site-bgm').paused,true);assert.equal(get('music-toggle').attributes['aria-pressed'],'false');assert.equal(get('music-label').textContent,'BGM OFF');
+  get('music-toggle').emit('click');assert.equal(get('site-bgm').paused,false);assert.equal(get('music-label').textContent,'BGM ON');
   get('music-toggle').emit('click');assert.equal(get('site-bgm').paused,true);
-  get('music-toggle').emit('click');assert.equal(get('site-bgm').paused,false);
-  get('replay-teaser').emit('click');assert.equal(get('site-bgm').paused,true);
+  get('music-toggle').emit('click');get('replay-teaser').emit('click');assert.equal(get('site-bgm').paused,true);
+  get('enter-site').emit('click');assert.equal(get('site-bgm').paused,true);
+});
+test('Video controls support seek bounds and full screen',()=>{
+  const {element:get}=boot();const video=get('teaser');
+  get('video-back').emit('click');assert.equal(video.currentTime,0);
+  get('video-forward').emit('click');assert.equal(video.currentTime,10);
+  video.currentTime=85;get('video-forward').emit('click');assert.equal(video.currentTime,89);
+  get('video-back').emit('click');assert.equal(video.currentTime,79);
+  get('video-fullscreen').emit('click');assert.equal(video.fullscreenCalled,true);
+  assert.match(html,/<video[^>]*\bcontrols\b/);
+});
+test('Book spines unfold one record at a time and can be closed again',()=>{
+  const {element:get}=boot();
+  const click=i=>get('archive-list').emit('click',{target:{closest:()=>get('book-spine-'+i)}});
+  click(0);assert.equal(get('archive-page-0').hidden,false);assert.equal(get('book-spine-0').attributes['aria-expanded'],'true');
+  click(1);assert.equal(get('archive-page-0').hidden,true);assert.equal(get('archive-page-1').hidden,false);
+  click(1);assert.equal(get('archive-page-1').hidden,true);assert.equal(get('archive-list').classList.contains('has-open-book'),false);
+  assert.equal((get('archive-list').innerHTML.match(/class="book-spine"/g)||[]).length,6);
 });
 test('Landing logo and decoration never occupy the video aperture',()=>{
   const aperture=html.match(/<div class="video-aperture">([\s\S]*?)<\/div>/)[1];

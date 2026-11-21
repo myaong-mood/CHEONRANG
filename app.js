@@ -12,7 +12,7 @@
     const playing = !music.paused;
     $('music-toggle').setAttribute('aria-pressed', String(playing));
     $('music-toggle').setAttribute('aria-label', playing ? '배경음악 일시정지' : '배경음악 재생');
-    $('music-label').textContent = playing ? 'BGM 재생 중' : 'BGM 재생';
+    $('music-label').textContent = playing ? 'BGM ON' : 'BGM OFF';
   }
   function startMusic() { music.play().then(syncMusicButton).catch(syncMusicButton); }
   $('music-toggle').addEventListener('click', () => {
@@ -25,28 +25,27 @@
   let lastFocus = null, isEntering = false;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function syncVideoButtons() {
-    $('sound-toggle').textContent = video.muted ? '소리 켜기' : '소리 끄기';
-    $('sound-toggle').setAttribute('aria-pressed', String(!video.muted));
-    $('video-toggle').textContent = video.paused ? '영상 재생' : '영상 일시정지';
-    $('video-toggle').setAttribute('aria-pressed', String(video.paused));
-  }
   function videoUnavailable() { landing.classList.add('video-unavailable'); }
   video.addEventListener('error', videoUnavailable);
   video.querySelector('source').addEventListener('error', videoUnavailable);
   video.addEventListener('loadeddata', () => landing.classList.remove('video-unavailable'));
-  video.addEventListener('play', syncVideoButtons);
-  video.addEventListener('pause', syncVideoButtons);
-  $('sound-toggle').addEventListener('click', () => { video.muted = !video.muted; if (video.paused) video.play().catch(() => {}); syncVideoButtons(); });
-  $('video-toggle').addEventListener('click', () => { if (video.paused) video.play().catch(() => {}); else video.pause(); syncVideoButtons(); });
+  function seekVideo(delta) {
+    const duration = Number.isFinite(video.duration) ? video.duration : Number.POSITIVE_INFINITY;
+    if (!video.readyState) return;
+    video.currentTime = Math.max(0, Math.min(duration, (video.currentTime || 0) + delta));
+  }
+  $('video-back').addEventListener('click', () => seekVideo(-10));
+  $('video-forward').addEventListener('click', () => seekVideo(10));
+  $('video-fullscreen').addEventListener('click', () => {
+    if (typeof video.requestFullscreen === 'function') video.requestFullscreen().catch(() => {});
+    else if (typeof video.webkitEnterFullscreen === 'function') video.webkitEnterFullscreen();
+  });
   if (reducedMotion) video.pause();
-  syncVideoButtons();
 
   function showMain({animate = true} = {}) {
     if (isEntering || landing.hidden) return;
     isEntering = true;
     video.pause();
-    startMusic();
     const finish = () => {
       video.pause(); landing.hidden = true; landing.classList.remove('landing-exit');
       main.hidden = false; header.hidden = false; isEntering = false;
@@ -62,12 +61,12 @@
     main.hidden = true; header.hidden = true; landing.hidden = false;
     window.scrollTo(0, 0); history.replaceState(null, '', location.pathname + location.search);
     if (!reducedMotion) video.play().catch(() => {});
-    $('enter-site').focus(); syncVideoButtons();
+    $('enter-site').focus();
   });
 
   $('team-roster').innerHTML = data.members.map(m => `
     <button type="button" class="member-card${m.leader ? ' leader' : ''}" data-member="${escape(m.id)}" style="--accent:${m.accent}" aria-label="${escape(m.name)} · ${escape(m.codeKo)} 개인 프로필 열기">
-      <span class="portrait-frame"><img class="member-portrait" src="${asset(m.id,'portrait')}" alt="${escape(m.name)}의 초상" loading="lazy" width="400" height="600"><span class="member-rank">天 · ${m.id === 'raon' ? '천율' : '천위'}</span><img class="member-emblem" src="${asset(m.id,'emblem')}" alt="${escape(m.name)}의 능력 문장" loading="lazy" width="640" height="640"></span>
+      <span class="portrait-frame"><img class="member-portrait" src="${asset(m.id,'portrait')}" alt="${escape(m.name)}의 초상" loading="lazy" width="400" height="600">${m.leader ? '<span class="leader-badge">대장</span>' : ''}<span class="member-rank">天 · ${m.id === 'raon' ? '천율' : '천위'}</span><img class="member-emblem" src="${asset(m.id,'emblem')}" alt="${escape(m.name)}의 능력 문장" loading="lazy" width="640" height="640"></span>
       <span class="member-copy"><img class="member-watermark" src="${asset(m.id,'emblem')}" alt="" aria-hidden="true" loading="lazy"><span class="member-role">${escape(m.role)}</span><strong class="member-name">${escape(m.name)}</strong><span class="member-codename">${m.id === 'gyeom' || m.id === 'hyeonryun' ? escape(m.codeKo) + '<small class="codename-hanja">' + escape(m.code) + '</small>' : escape(m.code)}</span><span class="member-ability">${escape(m.ability)}</span></span>
     </button>`).join('');
 
@@ -112,7 +111,23 @@
   Object.entries(data.ranks).forEach(([type,ranks]) => {
     $(`${type}-ranks`).innerHTML = ranks.map((r,i) => `<div class="rank-tile" style="--rank-color:${r.color}"><span class="rank-watermark" aria-hidden="true">${r.hanja}</span>${marks[type](i)}<h4><span>${r.hanja}</span>${r.name}</h4><p><strong>${r.summary}</strong><br>${r.description}</p></div>`).join('');
   });
-  $('archive-list').innerHTML = data.archives.map(a => `<details><summary>${a.title}</summary><div class="archive-body">${a.body}</div></details>`).join('');
+  const bookNames = ['皇室','宮署','家門','山河','象徵','歲時'];
+  $('archive-list').innerHTML = data.archives.map((a,i) => `<article class="archive-book"><button class="book-spine" type="button" data-book="${i}" aria-expanded="false" aria-controls="archive-page-${i}"><span class="spine-cap" aria-hidden="true">❖</span><span class="spine-hanja" aria-hidden="true">${bookNames[i]}</span><span class="spine-title">${escape(a.title)}</span><span class="spine-imprint" aria-hidden="true">天嵐</span></button><section id="archive-page-${i}" class="book-pages" hidden aria-label="${escape(a.title)}"><div class="book-paper"><div class="book-running-head"><span>天嵐 · 帝國記錄</span><span>${bookNames[i]}</span></div><h3>${escape(a.title)}</h3><div class="archive-body">${a.body}</div><p class="book-colophon">天嵐　／　천람의 기록</p></div></section></article>`).join('');
+  $('archive-list').addEventListener('click', event => {
+    const trigger = event.target.closest('[data-book]');
+    if (!trigger) return;
+    const index = Number(trigger.dataset.book);
+    const shouldOpen = trigger.getAttribute('aria-expanded') !== 'true';
+    data.archives.forEach((_, i) => {
+      const spine = document.querySelector(`[data-book="${i}"]`);
+      const panel = $(`archive-page-${i}`);
+      const active = i === index && shouldOpen;
+      spine.setAttribute('aria-expanded', String(active));
+      spine.closest('.archive-book').classList.toggle('is-open', active);
+      panel.hidden = !active;
+    });
+    $('archive-list').classList.toggle('has-open-book', shouldOpen);
+  });
   if (['#home','#team','#world','#classification'].includes(location.hash)) {
     const targetHash = location.hash;
     showMain({animate:false});
