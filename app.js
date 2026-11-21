@@ -66,7 +66,7 @@
 
   $('team-roster').innerHTML = data.members.map(m => `
     <button type="button" class="member-card${m.leader ? ' leader' : ''}" data-member="${escape(m.id)}" style="--accent:${m.accent}" aria-label="${escape(m.name)} · ${escape(m.codeKo)} 개인 프로필 열기">
-      <span class="portrait-frame"><img class="member-portrait" src="${asset(m.id,'portrait')}" alt="${escape(m.name)}의 초상" loading="lazy" width="400" height="600">${m.leader || m.deputy ? `<span class="leader-badge">${m.leader ? '대장' : '부대장'}</span>` : ''}<span class="member-rank">天 · ${m.id === 'raon' ? '천율' : '천위'}</span><img class="member-emblem" src="${asset(m.id,'emblem')}" alt="${escape(m.name)}의 능력 문장" loading="lazy" width="640" height="640"></span>
+      <span class="portrait-frame"><img class="member-portrait" src="${asset(m.id,'portrait')}" alt="${escape(m.name)}의 초상" loading="lazy" width="400" height="600">${m.leader || m.deputy || m.id === 'raon' ? `<span class="leader-badge">${m.leader ? '대장' : (m.deputy ? '부대장' : '가이드')}</span>` : ''}<span class="member-rank">天 · ${m.id === 'raon' ? '천율' : '천위'}</span><img class="member-emblem" src="${asset(m.id,'emblem')}" alt="${escape(m.name)}의 능력 문장" loading="lazy" width="640" height="640"></span>
       <span class="member-copy">
         <img class="nameplate-crest" src="assets/nameplate-crest.svg" alt="" aria-hidden="true" loading="lazy">
         <img class="member-watermark" src="${asset(m.id,'emblem')}" alt="" aria-hidden="true" loading="lazy">
