@@ -118,7 +118,7 @@ test('Personal themes are opt-in, pause main music, and restore only an existing
 });
 test('A character with no assigned theme shows preparation status and cannot start another track',()=>{
   const {element:get}=boot('#team');
-  get('team-roster').emit('click',{target:{closest:()=>({dataset:{member:'raon'},isConnected:true,focus(){}})}});
+  get('team-roster').emit('click',{target:{closest:()=>({dataset:{member:'gijun'},isConnected:true,focus(){}})}});
   assert.match(get('profile-content').innerHTML,/음원 준비 중/);
   assert.match(get('profile-content').innerHTML,/id="theme-toggle"[^>]*disabled/);
   get('profile-content').emit('click',{target:{closest:()=>get('theme-toggle')}});
