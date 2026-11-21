@@ -3,7 +3,7 @@
   const data = window.CHEONRANG;
   const $ = id => document.getElementById(id);
   const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const asset = (id, type) => `assets/${id}-${type}.${type === 'emblem' ? 'png' : 'webp'}`;
+  const asset = (id, type) => `assets/${id}-${type}.${type === 'emblem' ? 'png' : (id === 'gijun' ? 'jpg' : 'webp')}`;
   const landing = $('landing'), video = $('teaser'), main = $('main'), header = $('site-header');
   const dialog = $('profile-dialog');
   const music = $('site-bgm');

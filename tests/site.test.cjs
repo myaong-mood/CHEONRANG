@@ -30,7 +30,7 @@ function boot(hash='') {
 test('Five unique members have correctly paired local portraits and alpha PNG emblems',()=>{
   const {data}=boot();assert.equal(data.members.length,5);assert.equal(new Set(data.members.map(m=>m.id)).size,5);
   const names={hyeonryun:'현륜',raon:'윤라온',gyeom:'이겸',gijun:'한기준',ungyeol:'소운결'};
-  for(const m of data.members){assert.equal(m.name,names[m.id]);for(const kind of ['portrait.webp','emblem.png'])assert.ok(fs.existsSync(path.join(root,'assets',m.id+'-'+kind)));}
+  for(const m of data.members){assert.equal(m.name,names[m.id]);for(const kind of [m.id==='gijun'?'portrait.jpg':'portrait.webp','emblem.png'])assert.ok(fs.existsSync(path.join(root,'assets',m.id+'-'+kind)));}
   assert.equal(data.members.filter(m=>m.leader).length,1);
 });
 test('Landing enters main and teaser replay returns without losing content',()=>{
@@ -85,4 +85,10 @@ test('All static local references exist except the explicitly pending teaser',()
   const refs=[...html.matchAll(/(?:src|href|poster)="([^"#]+)"/g)].map(m=>m[1]).filter(x=>!/^https?:/.test(x));
   for(const ref of refs){if(ref==='CHEONRANG_MAIN_TEASER.MP4')continue;assert.ok(fs.existsSync(path.join(root,ref.split('?')[0])),ref);}
   assert.match(html,/<meta charset="utf-8">/);assert.match(html,/<dialog[^>]*aria-labelledby="profile-name"/);assert.doesNotMatch(app,/\.secret\b/);
+});
+
+test('Stylesheet contains no accidental patch markers that invalidate nameplate selectors',()=>{
+  const css=fs.readFileSync(path.join(root,'styles.css'),'utf8');
+  assert.doesNotMatch(css,/^\+/m);
+  assert.match(css,/\n\.nameplate-register\{/);
 });
